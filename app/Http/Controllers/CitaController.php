@@ -13,16 +13,25 @@ class CitaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-        $users = User::all();
+   public function index(Request $request)
+{
+    $busqueda = $request->input('buscar');
 
-        return Inertia::render('Citas/Index', [
-            'users' => $users,
-            'user' => Auth::user(),
-        ]);
-    }
+    $users = User::query()
+        ->when($busqueda, function ($query, $busqueda) {
+            $query->where('name', 'like', "%$busqueda%")
+                  ->orWhere('email', 'like', "%$busqueda%");
+        })
+        ->orderBy('id', 'desc')
+        ->paginate(5)
+        ->withQueryString(); // Para mantener la búsqueda en la paginación
+
+    return Inertia::render('Citas/Index', [
+        'users' => $users,
+        'busqueda' => $busqueda,
+        'user' => Auth::user(),
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
