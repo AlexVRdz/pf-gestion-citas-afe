@@ -29,7 +29,7 @@
                         </Link>
                     </div>
 
-                    <!-- 🔍 Buscador -->
+                    <!--  Buscador -->
                     <div class="mb-4">
                         <input
                             type="text"
@@ -121,7 +121,7 @@
                         </table>
                     </div>
 
-                    <!-- 📄 Paginación -->
+                    <!--  Paginación -->
                     <div class="mt-6 flex justify-center gap-2">
                         <button
                             v-for="link in users.links"
