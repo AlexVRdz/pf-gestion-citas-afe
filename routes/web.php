@@ -43,8 +43,9 @@ Route::middleware([
 
     // Rutas para Admin y Doctor
     Route::middleware(['role:Admin,Doctor'])->group(function () {
-        Route::resource('historial-medicos', HistorialMedicoController::class);
-        Route::resource('tipo-enfermedades', TipoEnfermedadController::class);
+        Route::resource('tipo-enfermedades', TipoEnfermedadController::class)->only(['index']);
+    Route::resource('historial-medicos', HistorialMedicoController::class);
+
     });
 
     // Rutas para Admin y Secretaria
@@ -55,5 +56,6 @@ Route::middleware([
 
     // Rutas compartidas para todos los roles autenticados
     Route::resource('citas', CitaController::class)->only(['index', 'show']);
-    Route::resource('pacientes', PacienteController::class)->only(['index', 'show']);
+    Route::resource('pacientes', PacienteController::class);
+    
 });

@@ -26,14 +26,15 @@ class Cita extends Model
     ];
 
     public function paciente()
-    {
-        return $this->belongsTo(Paciente::class);
-    }
+{
+    return $this->belongsTo(Paciente::class);
+}
 
-    public function medico()
-    {
-        return $this->belongsTo(Medico::class);
-    }
+public function medico()
+{
+    return $this->belongsTo(User::class, 'medico_id'); 
+}
+
 
     public function estado()
     {

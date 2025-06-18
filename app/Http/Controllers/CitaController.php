@@ -13,25 +13,29 @@ class CitaController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
+ public function index(Request $request)
 {
     $busqueda = $request->input('buscar');
 
-    $users = User::query()
+    $appointments = \App\Models\Cita::with(['paciente', 'medico'])
         ->when($busqueda, function ($query, $busqueda) {
-            $query->where('name', 'like', "%$busqueda%")
-                  ->orWhere('email', 'like', "%$busqueda%");
+            $query->whereHas('paciente', function ($q) use ($busqueda) {
+                $q->where('nombre', 'like', "%$busqueda%");
+            })->orWhereHas('medico', function ($q) use ($busqueda) {
+                $q->where('nombre', 'like', "%$busqueda%");
+            });
         })
-        ->orderBy('id', 'desc')
+        ->orderBy('fecha_hora', 'desc')
         ->paginate(5)
-        ->withQueryString(); // Para mantener la búsqueda en la paginación
+        ->withQueryString();
 
-    return Inertia::render('Citas/Index', [
-        'users' => $users,
+return Inertia::render('Pages/Citas/Index', [
+        'appointments' => $appointments,
         'busqueda' => $busqueda,
         'user' => Auth::user(),
     ]);
 }
+
 
     /**
      * Show the form for creating a new resource.

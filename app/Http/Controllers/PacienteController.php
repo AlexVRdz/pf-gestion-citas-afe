@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Paciente;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class PacienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $busqueda = $request->input('buscar');
@@ -26,58 +22,70 @@ class PacienteController extends Controller
             ->paginate(5)
             ->withQueryString();
 
-        return Inertia::render('Pacientes/Index', [
+return Inertia::render('Pages/Pacientes/Index', [
             'pacientes' => $pacientes,
             'user' => Auth::user(),
             'busqueda' => $busqueda,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return Inertia::render('Pacientes/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'email' => 'required|email|unique:pacientes,email',
+            'telefono' => 'required|string|max:20',
+            'direccion' => 'required|string|max:255',
+            'fecha_nacimiento' => 'required|date',
+            'genero' => 'required|in:M,F',
+            'numero_seguro' => 'nullable|string|unique:pacientes,numero_seguro',
+        ]);
+
+        Paciente::create($validated);
+
+        return redirect()->route('pacientes.index')->with('success', 'Paciente creado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $paciente = Paciente::findOrFail($id);
+
+        return Inertia::render('Pacientes/Edit', [
+            'paciente' => $paciente,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $paciente = Paciente::findOrFail($id);
+
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'email' => 'required|email|unique:pacientes,email,' . $paciente->id,
+            'telefono' => 'required|string|max:20',
+            'direccion' => 'required|string|max:255',
+            'fecha_nacimiento' => 'required|date',
+            'genero' => 'required|in:M,F',
+            'numero_seguro' => 'nullable|string|unique:pacientes,numero_seguro,' . $paciente->id,
+        ]);
+
+        $paciente->update($validated);
+
+        return redirect()->route('pacientes.index')->with('success', 'Paciente actualizado correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
+        $paciente = Paciente::findOrFail($id);
+        $paciente->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('pacientes.index')->with('success', 'Paciente eliminado correctamente.');
     }
 }

@@ -58,7 +58,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="appointment in users.data" :key="appointment.id">
+<tr v-for="appointment in appointments.data" :key="appointment.id">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
                                             {{
@@ -148,10 +148,11 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link, router } from "@inertiajs/vue3";
 
 defineProps({
-    users: Object,
+    appointments: Object,
     user: Object,
     busqueda: String,
 });
+
 
 const search = ref('');
 const currentTime = ref("");
