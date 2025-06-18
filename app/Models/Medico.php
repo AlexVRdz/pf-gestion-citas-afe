@@ -16,23 +16,32 @@ class Medico extends Model
         'tipo_contrato_id'
     ];
 
+    // Relación con el usuario (doctor)
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
-
+    // Relación con el tipo de contrato
     public function tipoContrato()
     {
-        return $this->belongsTo(TipoContrato::class);
+        return $this->belongsTo(TipoContrato::class, 'tipo_contrato_id');
     }
 
+    // Relación con las citas
     public function citas()
     {
-        return $this->hasMany(Cita::class);
+        return $this->hasMany(Cita::class, 'medico_id');
     }
 
+    // Relación con el historial médico
     public function historialMedicos()
     {
-        return $this->hasMany(HistorialMedico::class);
+        return $this->hasMany(HistorialMedico::class, 'medico_id');
+    }
+
+    // Accesor para obtener el nombre completo del médico
+    public function getNombreCompletoAttribute()
+    {
+        return $this->user ? $this->user->name . ' ' . $this->user->apellidos : '';
     }
 }

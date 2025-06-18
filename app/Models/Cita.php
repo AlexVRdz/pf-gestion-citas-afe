@@ -25,23 +25,23 @@ class Cita extends Model
         'costo' => 'decimal:2',
     ];
 
-    public function paciente()
-    {
-        return $this->belongsTo(Paciente::class);
-    }
-
     public function medico()
     {
-        return $this->belongsTo(Medico::class);
+        return $this->belongsTo(Medico::class, 'medico_id');
+    }
+
+    public function paciente()
+    {
+        return $this->belongsTo(Paciente::class, 'paciente_id');
     }
 
     public function estado()
     {
-        return $this->belongsTo(Estado::class);
+        return $this->belongsTo(Estado::class, 'estado_id');
     }
 
     public function tipoPago()
     {
-        return $this->belongsTo(TipoPago::class);
+        return $this->belongsTo(TipoPago::class, 'tipo_pago_id');
     }
 }

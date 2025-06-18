@@ -49,7 +49,7 @@ Route::middleware([
 
     // Rutas para Admin y Secretaria
     Route::middleware(['role:Admin,Secretaria'])->group(function () {
-        Route::get('citas/agenda', [CitaController::class, 'agenda'])->name('citas.agenda');
+        Route::resource('citas', CitaController::class)->middleware(['auth', 'verified']);
         Route::get('pacientes/registro', [PacienteController::class, 'registro'])->name('pacientes.registro');
     });
 
