@@ -28,15 +28,18 @@ class MedicoController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        $doctores = User::where('role', 'Doctor')->get();
-        $contratos = TipoContrato::all();
+{
+    $doctores = User::where('role', 'Doctor')->get();
+    $contratos = TipoContrato::all();
+    $usuarioAutenticado = auth()->user(); // ✅
 
-        return Inertia::render('Medicos/Create', [
-            'doctores' => $doctores,
-            'contratos' => $contratos
-        ]);
-    }
+    return Inertia::render('Medicos/Create', [
+        'doctores' => $doctores,
+        'contratos' => $contratos,
+        'user' => $usuarioAutenticado, // ✅ Esto es crucial
+    ]);
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -77,17 +80,16 @@ class MedicoController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {
-        $medico = Medico::findOrFail($id);
-        $doctores = User::where('role', 'Doctor')->get();
-        $contratos = TipoContrato::all();
+{
+    $medico = Medico::with(['user'])->findOrFail($id); // 🩺 ← ¡esto es lo que faltaba!
 
-        return Inertia::render('Medicos/Edit', [
-            'medico' => $medico,
-            'doctores' => $doctores,
-            'contratos' => $contratos
-        ]);
-    }
+    return Inertia::render('Medicos/Edit', [
+        'medico' => $medico,
+        'doctores' => User::where('role', 'Doctor')->get(),
+        'contratos' => TipoContrato::all()
+    ]);
+}
+
 
     /**
      * Update the specified resource in storage.
