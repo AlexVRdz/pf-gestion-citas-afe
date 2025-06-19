@@ -22,7 +22,7 @@ class PacienteController extends Controller
             ->paginate(5)
             ->withQueryString();
 
-return Inertia::render('Pages/Pacientes/Index', [
+return Inertia::render('Pacientes/Index', [
             'pacientes' => $pacientes,
             'user' => Auth::user(),
             'busqueda' => $busqueda,
@@ -33,6 +33,17 @@ return Inertia::render('Pages/Pacientes/Index', [
     {
         return Inertia::render('Pacientes/Create');
     }
+
+    public function show($id)
+{
+    $paciente = Paciente::findOrFail($id);
+
+    return Inertia::render('Pacientes/Show', [
+        'paciente' => $paciente
+    ]);
+}
+
+
 
     public function store(Request $request)
     {

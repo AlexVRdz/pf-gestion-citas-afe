@@ -36,14 +36,16 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="paciente in pacientes.data" :key="paciente.id">
-                <td class="px-6 py-4 whitespace-nowrap">{{ paciente.nombre }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ paciente.apellidos }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ paciente.correo }}</td>
-              </tr>
+  <td class="px-6 py-4 whitespace-nowrap">{{ paciente?.nombre || 'N/A' }}</td>
+  <td class="px-6 py-4 whitespace-nowrap">{{ paciente?.apellidos || 'N/A' }}</td>
+  <td class="px-6 py-4 whitespace-nowrap">{{ paciente?.email || 'Sin correo' }}</td>
+</tr>
+
             </tbody>
           </table>
 
           <!--  Paginación -->
+            
           <div class="mt-4 flex justify-center gap-2">
             <button
               v-for="link in pacientes.links"
@@ -70,9 +72,16 @@ import { router } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 defineProps({
-  pacientes: Object,
-  busqueda: String,
+  pacientes: {
+    type: Object,
+    default: () => ({ data: [], links: [] }),
+  },
+  busqueda: {
+    type: String,
+    default: '',
+  },
 });
+
 
 const search = ref('');
 search.value = $props.busqueda ?? '';

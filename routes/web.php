@@ -51,11 +51,11 @@ Route::middleware([
     // Rutas para Admin y Secretaria
     Route::middleware(['role:Admin,Secretaria'])->group(function () {
         Route::resource('citas', CitaController::class)->middleware(['auth', 'verified']);
-        Route::get('pacientes/registro', [PacienteController::class, 'registro'])->name('pacientes.registro');
+       // Route::get('pacientes/registro', [PacienteController::class, 'registro'])->name('pacientes.registro');
     });
 
     // Rutas compartidas para todos los roles autenticados
     Route::resource('citas', CitaController::class)->only(['index', 'show']);
-    Route::resource('pacientes', PacienteController::class);
+    Route::resource('pacientes', PacienteController::class)->only(['index', 'show']);
     
 });
