@@ -9,6 +9,9 @@ class TipoEnfermedad extends Model
 {
     use HasFactory;
 
+    // Esto evita el error con el nombre de la tabla
+    protected $table = 'tipo_enfermedades';
+
     protected $fillable = ['nombre', 'descripcion', 'categoria'];
 
     public function historialMedicos()

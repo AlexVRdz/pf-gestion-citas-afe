@@ -17,29 +17,30 @@ use Illuminate\Support\Facades\DB;
 
 class CitaController extends Controller
 {
-    // Index - Listar citas
-    public function index(Request $request)
-    {
-        $busqueda = $request->input('buscar');
+// Index - Listar citas
+public function index(Request $request)
+{
+    $busqueda = $request->input('buscar');
 
-        $appointments = Cita::with(['paciente', 'medico', 'estado', 'tipoPago'])
-            ->when($busqueda, function ($query, $busqueda) {
-                $query->whereHas('paciente', function ($q) use ($busqueda) {
-                    $q->where('nombre', 'like', "%$busqueda%");
-                })->orWhereHas('medico', function ($q) use ($busqueda) {
-                    $q->where('nombre', 'like', "%$busqueda%");
-                });
-            })
-            ->orderBy('fecha_hora', 'desc')
-            ->paginate(5)
-            ->withQueryString();
+    $appointments = \App\Models\Cita::with(['paciente', 'medico', 'estado', 'tipoPago'])
+        ->when($busqueda, function ($query, $busqueda) {
+            $query->whereHas('paciente', function ($q) use ($busqueda) {
+                $q->where('nombre', 'like', "%$busqueda%");
+            })->orWhereHas('medico', function ($q) use ($busqueda) {
+                $q->where('nombre', 'like', "%$busqueda%");
+            });
+        })
+        ->orderBy('fecha_hora', 'desc')
+        ->paginate(5)
+        ->withQueryString();
 
-        return Inertia::render('Citas/Index', [
-            'appointments' => $appointments,
-            'busqueda' => $busqueda,
-            'user' => Auth::user(),
-        ]);
-    }
+    return Inertia::render('Citas/Index', [
+        'appointments' => $appointments,
+        'busqueda' => $busqueda,
+        'user' => Auth::user(),
+    ]);
+}
+
 
     // Create - Mostrar formulario de creación
     public function create()

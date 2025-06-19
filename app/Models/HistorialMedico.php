@@ -24,17 +24,19 @@ class HistorialMedico extends Model
     ];
 
     public function paciente()
-    {
-        return $this->belongsTo(Paciente::class);
-    }
+{
+    return $this->belongsTo(Paciente::class);
+}
+
+public function tipoEnfermedad()
+{
+    return $this->belongsTo(TipoEnfermedad::class);
+}
+
 
     public function medico()
     {
         return $this->belongsTo(Medico::class);
     }
-
-    public function tipoEnfermedad()
-    {
-        return $this->belongsTo(TipoEnfermedad::class);
-    }
+   
 }
